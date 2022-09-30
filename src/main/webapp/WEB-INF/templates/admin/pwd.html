@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>e起去旅行管理系统</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="/static/base/images/logo.png">
+    <link rel="stylesheet" href="/static/admin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fonts/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/admin/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/admin/dist/css/skins/_all-skins.min.css">
+    <style>
+        *{
+            font-family:"Microsoft YaHei";
+        }
+        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+            vertical-align:middle;
+            text-align:center;
+        }
+
+
+
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <a href="/" class="logo">
+            <span class="logo-lg"><img src="/static/base/images/logo.png"
+                                       style="height:40px;width:40px;">e起去旅行管理系统</span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">下拉菜单</span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/static/admin/dist/img/user.jpg"
+                                 class="user-image" alt="User Image">
+                            <span class="hidden-xs" sec:authentication="name"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="user-header">
+                                <img src="/static/admin/dist/img/user.jpg"
+                                     class="img-circle" alt="User Image">
+                                <p>
+                                    <span sec:authentication="name"></span>
+                                    <small>{{ online_time }}</small>
+                                </p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout" class="btn btn-default btn-flat">退出系统</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="/static/admin/dist/img/user.jpg" class="img-circle"
+                         alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>用户<span sec:authentication="name"></span></p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                </div>
+            </div>
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="搜索...">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
+                                class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <ul class="sidebar-menu">
+                <li class="header">管理菜单</li>
+                <li class="treeview" id="g-1">
+                    <a href="#">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span>首页</span>
+                        <span class="label label-primary pull-right">1</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-1-1">
+                            <a href="/admin">
+                                <i class="fa fa-circle-o"></i> 控制面板
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-2">
+                    <a href="#">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span>会员管理</span>
+                        <span class="label label-primary pull-right">1</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-2-1">
+                            <a href="/admin/user/list">
+                                <i class="fa fa-circle-o"></i> 会员列表
+                            </a>
+                        </li>
+                        <li id="g-2-2">
+                            <a href="/admin/suggestion/list">
+                                <i class="fa fa-circle-o"></i> 意见建议
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-3">
+                    <a href="#">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                        <span>地区管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-3-1">
+                            <a href="/admin/area/add">
+                                <i class="fa fa-circle-o"></i> 添加地区
+                            </a>
+                        </li>
+                        <li id="g-3-2">
+                            <a href="/admin/area/list">
+                                <i class="fa fa-circle-o"></i> 地区列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-4">
+                    <a href="#">
+                        <i class="fa fa-file-video-o" aria-hidden="true"></i>
+                        <span>景区管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-4-1">
+                            <a href="/admin/scenic/add">
+                                <i class="fa fa-circle-o"></i> 添加景区
+                            </a>
+                        </li>
+                        <li id="g-4-2">
+                            <a href="/admin/scenic/list">
+                                <i class="fa fa-circle-o"></i> 景区列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-5">
+                    <a href="#">
+                        <i class="fa fa-book" aria-hidden="true"></i>
+                        <span>游记管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-5-1">
+                            <a href="/admin/travels/add">
+                                <i class="fa fa-circle-o"></i> 添加游记
+                            </a>
+                        </li>
+                        <li id="g-5-2">
+                            <a href="/admin/travels/list">
+                                <i class="fa fa-circle-o"></i> 游记列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-8">
+                    <a href="#">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                        <span>日志管理</span>
+                        <span class="label label-primary pull-right">3</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-8-1">
+                            <a href="/admin/oplog/list">
+                                <i class="fa fa-circle-o"></i> 操作日志列表
+                            </a>
+                        </li>
+                        <li id="g-8-2">
+                            <a href="/admin/adminloginlog/list">
+                                <i class="fa fa-circle-o"></i> 管理员登录日志列表
+                            </a>
+                        </li>
+                        <li id="g-8-3">
+                            <a href="/admin/userloginlog/list">
+                                <i class="fa fa-circle-o"></i> 会员登录日志列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
+    <div class="content-wrapper">
+        <!--内容-->
+        <section class="content-header">
+            <h1>e起去旅行管理系统</h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 个人资料</a></li>
+                <li class="active">修改密码</li>
+            </ol>
+        </section>
+        <section class="content" id="showcontent">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">修改密码</h3>
+                        </div>
+                        <form role="form" method="post" th:action="@{/admin/pwd/change}">
+                            <div class="box-body">
+                                <div th:if="${message}" class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                                    </button>
+                                    <h4><i class="icon fa fa-check"></i> 操作成功</h4>
+                                    <span th:text="${message}"></span>
+                                </div>
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                                    </button>
+                                    <h4><i class="icon fa fa-ban"></i> 操作失败</h4>
+                                    <span th:text="${error}"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="old_password">旧密码</label>
+                                    <input type="password" id="old_password" name="old_password" class="form-control"
+                                           placeholder="请输入旧密码！">
+                                    <div class="col-md-12">
+                                        <p style="color: red" th:text="${oldPasswordError}"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new_password">新密码</label>
+                                    <input type="password" id="new_password" name="new_password" class="form-control"
+                                           placeholder="请输入新密码！">
+                                    <div class="col-md-12">
+                                        <p style="color: red" th:text="${newPasswordError}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-primary" value="修改">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<script src="/static/admin/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/static/admin/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/admin/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/static/admin/plugins/fastclick/fastclick.js"></script>
+<script src="/static/admin/dist/js/app.min.js"></script>
+<script src="/static/admin/dist/js/demo.js"></script>
+</body>
+</html>
+

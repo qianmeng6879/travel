@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.mxzero.travel.dao.AreaDao">
+
+    <select id="findById" resultType="Area">
+        select id, name, introduction, recommended, create_time from area where id = #{id}
+    </select>
+
+    <select id="findByName" resultType="Area">
+        select id, name, introduction, recommended, create_time from area where name = #{name}
+    </select>
+
+    <select id="findIsRecommended" resultType="Area">
+        select id, name, introduction, recommended, create_time from area where recommended = 1
+    </select>
+
+    <select id="findAll" resultType="Area">
+        select id, name, introduction, recommended, create_time from area
+    </select>
+
+    <insert id="doCreate" parameterType="Area">
+        insert into area(name, introduction, recommended, create_time) values(#{name}, #{introduction}, #{recommended}, now())
+    </insert>
+
+    <delete id="doRemove" parameterType="int">
+        delete from area where id = #{id}
+    </delete>
+
+    <update id="doUpdate" parameterType="Area">
+        update area set update_time = now()
+        <if test="name != null">
+            ,name = #{name}
+        </if>
+        <if test="introduction != null">
+            ,introduction = #{introduction}
+        </if>
+        <if test="recommended != null">
+            ,recommended = #{recommended}
+        </if>
+        where id = #{id}
+    </update>
+
+</mapper>
+

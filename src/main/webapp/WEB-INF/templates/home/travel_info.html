@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your description">
+    <meta name="keywords" content="Your keywords">
+    <meta name="author" content="Your name">
+    <link rel="shortcut icon" href="/static/base/images/logo.png">
+    <link href="/static/base/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/base/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/base/css/animate.css" rel="stylesheet">
+    <link href="/static/base/css/select2.css" rel="stylesheet">
+    <link href="/static/base/css/smoothness/jquery-ui-1.10.0.custom.css" rel="stylesheet">
+    <link href="/static/base/css/style.css" rel="stylesheet">
+
+    <script src="/static/base/js/jquery.js"></script>
+    <script src="/static/base/js/jquery-ui.js"></script>
+    <script src="/static/base/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/base/js/jquery.easing.1.3.js"></script>
+    <script src="/static/base/js/superfish.js"></script>
+    <script src="/static/base/js/select2.js"></script>
+
+    <script src="/static/base/js/jquery.parallax-1.1.3.resize.js"></script>
+    <script src="/static/base/js/SmoothScroll.js"></script>
+    <script src="/static/base/js/jquery.appear.js"></script>
+    <script src="/static/base/js/jquery.caroufredsel.js"></script>
+    <script src="/static/base/js/jquery.touchSwipe.min.js"></script>
+    <script src="/static/base/js/jquery.ui.totop.js"></script>
+    <script src="/static/base/js/script.js"></script>
+
+</head>
+
+<body class="front">
+<div id="main">
+    <div class="top2_wrapper">
+        <div class="container">
+            <div class="top2 clearfix">
+                <header>
+                    <div class="logo_wrapper">
+                        <a href="/" class="logo">
+                            <img src="/static/base/images/logo.png" alt="" class="img-responsive">
+                        </a>
+                    </div>
+                </header>
+                <div class="navbar navbar_ navbar-default">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="navbar-collapse navbar-collapse_ collapse">
+                        <ul class="nav navbar-nav sf-menu clearfix">
+                            <li><a href="/">首页</a></li>
+                            <li><a href="/search/">全部景区</a></li>
+                            <li><a href="/about/">关于我们</a></li>
+                            <li><a href="/contact/">联系我们</a></li>
+
+                            <th:block sec:authorize="${isAuthenticated()}">
+                                <li><a href="/collect/list">我的收藏</a></li>
+                                <li><a href="/logout">退出</a></li>
+                            </th:block>
+
+                            <th:block sec:authorize="${isAnonymous()}">
+                                <li><a href="/login">登录/注册</a></li>
+                            </th:block>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <img th:src="@{/static/base/images/about_banner.jpg}">
+    </div>
+    <div class="breadcrumbs1_wrapper">
+        <div class="container">
+            <div class="breadcrumbs1"><a th:href="@{/}">首页</a><span>/</span>景区详情</div>
+        </div>
+    </div>
+
+    <!--景区内容-->
+    <div id="team1">
+        <div class="container">
+            <h2 class="animated">
+                <span th:text="${scenic.title}"></span>
+                <button th:if="${scenic.isCollect}" class="collect-button">已收藏</button>
+                <button th:unless="${scenic.isCollect}" class="collect-button" th:data="${scenic.id}">收藏</button>
+            </h2>
+            <div class="title1" th:utext="${scenic.content}"></div>
+        </div>
+    </div>
+    <!--游记列表-->
+    <div class="container" style="padding-bottom: 100px">
+        <h2 class="animated"><span th:text="${scenic.title}"></span>游记</h2>
+        <div class="row">
+            <div class="title1">暂无游记</div>
+            <div class="col-sm-12 animated undefined visible">
+                <ul class="ul2" style="padding-left: 150px">
+                    <li class="form-groupe">
+                        <a href="#">游记信息</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/base/js/script.js"></script>
+<script th:src="@{/static/layer/layer.js}"></script>
+<script>
+    $(document).ready(function () {
+        $(".collect-button").click(function () {       // 触发点击事件
+            var scenic_id = $(this).attr("data");            // 获取景区ID
+
+            // 当没有获取到景区id时表示已经收藏
+            if(!scenic_id){
+               return layer.msg("您已收藏",{icon:2,time:2000});   // 提示已收藏
+            }
+
+            $.ajax({                                   // 使用Ajax异步提交
+                url: "/collect/collect", // 提交到的URL
+                type: "POST",                            // 提交方式为GET
+                data:{scenicId: scenic_id},             // 传递参数
+                success: function (res) {               // 操作成功后执行逻辑
+                    if (res.ok == 1) {
+                        layer.msg("收藏成功！",{icon:1,time:2000}); // 显示弹出层信息
+                        $(".collect-button").empty();               // 清空按钮区文字
+                        $(".collect-button").append("已收藏");      // 填充文字
+                    } else {
+                        layer.msg("您已收藏",{icon:2,time:2000});   // 提示已收藏
+                    }
+                }
+            })
+        });
+    });
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your description">
+    <meta name="keywords" content="Your keywords">
+    <meta name="author" content="Your name">
+    <link rel="shortcut icon" href="/static/base/images/logo.png">
+    <link href="/static/base/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/base/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/base/css/animate.css" rel="stylesheet">
+    <link href="/static/base/css/select2.css" rel="stylesheet">
+    <link href="/static/base/css/smoothness/jquery-ui-1.10.0.custom.css" rel="stylesheet">
+    <link href="/static/base/css/style.css" rel="stylesheet">
+
+    <script src="/static/base/js/jquery.js"></script>
+    <script src="/static/base/js/jquery-ui.js"></script>
+    <script src="/static/base/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/static/base/js/jquery.easing.1.3.js"></script>
+    <script src="/static/base/js/superfish.js"></script>
+    <script src="/static/base/js/select2.js"></script>
+
+    <script src="/static/base/js/jquery.parallax-1.1.3.resize.js"></script>
+    <script src="/static/base/js/SmoothScroll.js"></script>
+    <script src="/static/base/js/jquery.appear.js"></script>
+    <script src="/static/base/js/jquery.caroufredsel.js"></script>
+    <script src="/static/base/js/jquery.touchSwipe.min.js"></script>
+    <script src="/static/base/js/jquery.ui.totop.js"></script>
+    <script src="/static/base/js/script.js"></script>
+</head>
+
+<body class="front">
+<div id="main">
+    <div class="top2_wrapper">
+        <div class="container">
+            <div class="top2 clearfix">
+                <header>
+                    <div class="logo_wrapper">
+                        <a href="/" class="logo">
+                            <img src="/static/base/images/logo.png" alt="" class="img-responsive">
+                        </a>
+                    </div>
+                </header>
+                <div class="navbar navbar_ navbar-default">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="navbar-collapse navbar-collapse_ collapse">
+                        <ul class="nav navbar-nav sf-menu clearfix">
+                            <li><a href="/">首页</a></li>
+                            <li><a href="/search">全部景区</a></li>
+                            <li><a href="/about">关于我们</a></li>
+                            <li><a href="/contact">联系我们</a></li>
+
+                            <th:block sec:authorize="${isAuthenticated()}">
+                                <li><a href="/collect/list">我的收藏</a></li>
+                                <li><a href="/logout">退出</a></li>
+                            </th:block>
+
+                            <th:block sec:authorize="${isAnonymous()}">
+                                <li><a href="/login">登录/注册</a></li>
+                            </th:block>
+                            <!--                            <div th:text="${#authentication.name}"></div>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--导入幻灯-->
+    <div id="slider_wrapper">
+        <div class="container">
+            <div id="slider_inner">
+                <div class="">
+                    <div id="slider">
+                        <div class="">
+                            <div class="carousel-box">
+                                <div class="inner">
+                                    <div class="carousel main">
+                                        <ul>
+                                            <li>
+                                                <div class="slider">
+                                                    <div class="slider_inner">
+                                                        <div class="txt1"><span>欢迎来到</span></div>
+                                                        <div class="txt2"><span>e起去旅行</span></div>
+                                                        <div class="txt3"><span>e起去旅行为您提供最全的景区介绍、最优的旅游路线、最后的旅游服务.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="slider">
+                                                    <div class="slider_inner">
+                                                        <div class="txt1"><span>范围覆盖</span></div>
+                                                        <div class="txt2"><span>全国景区</span></div>
+                                                        <div class="txt3"><span>从海南到东北，伴你走过东南西北.</span></div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="slider">
+                                                    <div class="slider_inner">
+                                                        <div class="txt1"><span>海量数据</span></div>
+                                                        <div class="txt2"><span>精彩游记</span></div>
+                                                        <div class="txt3"><span>分享最实用的旅游攻略，结交爱旅游的朋友</span></div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider_pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="front_tabs">
+        <div class="container">
+            <div class="tabs_wrapper tabs1_wrapper">
+                <div class="tabs tabs1">
+                    <div class="tabs_tabs tabs1_tabs">
+                        <ul>
+                            <li class="active flights"><a href="#tabs-1">Flights</a></li>
+                        </ul>
+                    </div>
+                    <div class="tabs_content tabs1_content">
+                        <div id="tabs-1">
+                            <!--导入搜素框-->
+                            <form th:action="@{/search}" class="form1" method="GET">
+                                <div class="row">
+                                    <!-- 按城市查询 -->
+                                    <div class="col-sm-4 col-md-2">
+                                        <div class="select1_wrapper">
+                                            <label>按城市查询:</label>
+                                            <div class="select1_inner">
+                                                <select name="area_id" class="select2 select" style="width: 100%">
+                                                    <th:block th:each="area:${areaList}">
+                                                        <option th:value="${area.id}" th:text="${area.name}"></option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 按星级查询 -->
+                                    <div class="col-sm-4 col-md-2">
+                                        <div class="select1_wrapper">
+                                            <label>按星级查询:</label>
+                                            <div class="select1_inner">
+                                                <select name="star" class="select2 select" style="width: 100%">
+                                                    <option value="1">1 星</option>
+                                                    <option value="2">2 星</option>
+                                                    <option value="3">3 星</option>
+                                                    <option value="4">4 星</option>
+                                                    <option value="5" selected>5 星</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-2">
+                                        <div class="button1_wrapper">
+                                            <button type="submit" class="btn-default btn-form1-submit">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="popular_cruises1">
+        <div class="container">
+            <h2 class="animated">热门景区</h2>
+            <br><br>
+            <div id="popular_wrapper" class="animated" data-animation="fadeIn" data-animation-delay="300">
+                <div id="popular_inner">
+                    <div id="popular">
+                        <div class="carousel-box">
+                            <div class="inner">
+                                <div class="carousel main">
+                                    <ul>
+                                        <li th:each="scenic : ${hotScenic}">
+                                            <div class="popular">
+                                                <div class="popular_inner">
+                                                    <figure>
+                                                        <img th:src="@{'/static/uploads/' + ${scenic.imageUrl}}"
+                                                             alt=""
+                                                             class="img-responsive">
+                                                        <div class="over">
+                                                            <div class="v1"><span th:text="${scenic.title}"></span><span
+                                                                    th:text="${scenic.area.name}"></span></div>
+                                                            <div class="v2" th:text="${scenic.introduction}"></div>
+                                                        </div>
+                                                    </figure>
+                                                    <div class="caption">
+                                                        <div class="txt1"><span th:text="${scenic.title}"></span><span
+                                                                th:text="${scenic.area.name}"></span></div>
+                                                        <div class="txt2" th:text="${scenic.address}"></div>
+                                                        <div class="txt3 clearfix">
+                                                            <div class="stars1">
+                                                                <img src="/static/base/images/star1.png" alt="">
+                                                                <img src="/static/base/images/star1.png" alt="">
+                                                                <img src="/static/base/images/star1.png" alt="">
+                                                                <img src="/static/base/images/star1.png" alt="">
+                                                                <img src="/static/base/images/star2.png" alt="">
+                                                            </div>
+                                                            <div class="right_side">
+                                                                <a th:href="@{'/scenic/' + ${scenic.id}}"
+                                                                   class="btn-default btn1">查看</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="popular_pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="team1" th:each="data : ${recommendedData}">
+        <div class="container">
+            <h2 class="animated" th:text="${data.area.name}"></h2>
+            <div class="title1 animated" style="text-indent: 2em;" th:text="${data.area.introduction}">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-4" th:each="scenicItem : ${data.scenicList}">
+                    <div class="thumb3 animated" data-animation="flipInY" data-animation-delay="300">
+                        <div class="thumbnail clearfix">
+                            <figure class="">
+                                <a th:href="@{'/scenic/' + ${scenicItem.id}}">
+                                    <img th:src="@{'/static/uploads/' + ${scenicItem.imageUrl}}" alt=""
+                                         class="img-responsive">
+                                    <div class="over" th:text="${scenicItem.title}"></div>
+                                </a>
+                            </figure>
+                            <div class="caption">
+                                <div class="txt1" th:text="${scenicItem.title}"></div>
+                                <div class="txt2" th:text="${scenicItem.address}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/base/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>e起去旅行管理系统</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="/static/base/images/logo.png">
+    <link rel="stylesheet" href="/static/admin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fonts/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/admin/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/admin/dist/css/skins/_all-skins.min.css">
+    <style>
+        *{
+            font-family:"Microsoft YaHei";
+        }
+        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+            vertical-align:middle;
+            text-align:center;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <a href="/" class="logo">
+            <span class="logo-lg"><img src="/static/base/images/logo.png"
+                                       style="height:40px;width:40px;">e起去旅行管理系统</span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">下拉菜单</span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/static/admin/dist/img/user.jpg"
+                                 class="user-image" alt="User Image">
+                            <span class="hidden-xs" sec:authentication="name"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="user-header">
+                                <img src="/static/admin/dist/img/user.jpg"
+                                     class="img-circle" alt="User Image">
+                                <p>
+                                    <span sec:authentication="name"></span>
+                                    <small>{{ online_time }}</small>
+                                </p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout" class="btn btn-default btn-flat">退出系统</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="/static/admin/dist/img/user.jpg" class="img-circle"
+                         alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>用户<span sec:authentication="name"></span></p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                </div>
+            </div>
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="搜索...">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
+                                class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <ul class="sidebar-menu">
+                <li class="header">管理菜单</li>
+                <li class="treeview" id="g-1">
+                    <a href="#">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span>首页</span>
+                        <span class="label label-primary pull-right">1</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-1-1">
+                            <a href="/admin">
+                                <i class="fa fa-circle-o"></i> 控制面板
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-2">
+                    <a href="#">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span>会员管理</span>
+                        <span class="label label-primary pull-right">1</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-2-1">
+                            <a href="/admin/user/list">
+                                <i class="fa fa-circle-o"></i> 会员列表
+                            </a>
+                        </li>
+                        <li id="g-2-2">
+                            <a href="/admin/suggestion/list">
+                                <i class="fa fa-circle-o"></i> 意见建议
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-3">
+                    <a href="#">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                        <span>地区管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-3-1">
+                            <a href="/admin/area/add">
+                                <i class="fa fa-circle-o"></i> 添加地区
+                            </a>
+                        </li>
+                        <li id="g-3-2">
+                            <a href="/admin/area/list">
+                                <i class="fa fa-circle-o"></i> 地区列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-4">
+                    <a href="#">
+                        <i class="fa fa-file-video-o" aria-hidden="true"></i>
+                        <span>景区管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-4-1">
+                            <a href="/admin/scenic/add">
+                                <i class="fa fa-circle-o"></i> 添加景区
+                            </a>
+                        </li>
+                        <li id="g-4-2">
+                            <a href="/admin/scenic/list">
+                                <i class="fa fa-circle-o"></i> 景区列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-5">
+                    <a href="#">
+                        <i class="fa fa-book" aria-hidden="true"></i>
+                        <span>游记管理</span>
+                        <span class="label label-primary pull-right">2</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-5-1">
+                            <a href="/admin/travels/add">
+                                <i class="fa fa-circle-o"></i> 添加游记
+                            </a>
+                        </li>
+                        <li id="g-5-2">
+                            <a href="/admin/travels/list">
+                                <i class="fa fa-circle-o"></i> 游记列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview" id="g-8">
+                    <a href="#">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                        <span>日志管理</span>
+                        <span class="label label-primary pull-right">3</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="g-8-1">
+                            <a href="/admin/oplog/list">
+                                <i class="fa fa-circle-o"></i> 操作日志列表
+                            </a>
+                        </li>
+                        <li id="g-8-2">
+                            <a href="/admin/adminloginlog/list">
+                                <i class="fa fa-circle-o"></i> 管理员登录日志列表
+                            </a>
+                        </li>
+                        <li id="g-8-3">
+                            <a href="/admin/userloginlog/list">
+                                <i class="fa fa-circle-o"></i> 会员登录日志列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
+    <div class="content-wrapper">
+        <!--内容-->
+        <section class="content-header">
+            <h1>e起去旅行管理系统</h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">控制面板</li>
+            </ol>
+        </section>
+        <section class="content" id="showcontent">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">公司简介</h3>
+                        </div>
+                        <div class="box-body">
+                            <p>
+                                <b>e起去旅行</b>我们是一个高质量的旅游爱好者群体，钟情于自驾游，拥有专业的摄影技术，为您提供最优质的旅游服务。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">特色版块</h3>
+                        </div>
+                        <div class="box-body">
+                            <p><b>神奇的旅行</b></p>
+                            为您展示真实的旅游景区、精彩的旅游照片、全面的旅游攻略以及最新的旅游资讯
+                            <p><b>分享旅行</b></p>
+                            交换资讯，分享旅行。帮助这里的这里朋友，或者是获得帮助。也可以交流攻略、美食、音乐、摄影日记，以及与旅行有关的零零种种...
+                            <p><b>发现惊喜</b></p>
+                            只要你爱旅行，只要你有爱。这里的一切都是都由你和其他成员产生和决定。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--内容-->
+    </div>
+</div>
+
+<script src="/static/js/echarts.min.js"></script>
+<script>
+    var myChart = echarts.init(document.getElementById('meminfo'));
+    option = {
+		backgroundColor: "white",
+		tooltip: {
+			formatter: "{a} <br/>{b} : {c}%"
+		},
+		toolbox: {
+			feature: {
+				restore: {},
+				saveAsImage: {}
+			}
+		},
+		series: [{
+			name: '内存使用率',
+			type: 'gauge',
+			detail: {
+				formatter: '{value}%'
+			},
+			data: [{
+				value: 50,
+				name: '内存使用率'
+			}]
+		}]
+	};
+    setInterval(function () {
+        option.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+        myChart.setOption(option, true);
+    },2000);
+
+
+</script>
+<script src="/static/admin/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/static/admin/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/admin/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/static/admin/plugins/fastclick/fastclick.js"></script>
+<script src="/static/admin/dist/js/app.min.js"></script>
+<script src="/static/admin/dist/js/demo.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#g-1").addClass("active");
+        $("#g-1-1").addClass("active");
+    });
+
+</script>
+</body>
+</html>
+
+
+
+
+

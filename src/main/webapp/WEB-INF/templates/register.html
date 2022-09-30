@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>e起去旅行</title>
+
+  <link rel="stylesheet" href="/static/base/css/login.css" type="text/css">
+</head>
+
+<body>
+  <!-- 导航栏开始 -->
+  <div id="toolbar">
+    <a href="/" class="router-link-exact-active router-link-active">
+      <img src="/static/base/images/logo.png" class="icon">
+      <h1>e起去旅行</h1>
+    </a>
+    <ul class="links">
+      <li>
+        <a href="/login" class="">登录</a>
+      </li>
+      <li>
+        <a href="/register" class="">注册</a>
+      </li>
+    </ul>
+  </div>
+  <!-- 导航栏结束 -->
+  <!--内容-->
+  <div class="container">
+    <div id="login" class="login-container">
+      <form role="form" method="POST" th:action="@{/register.action}">
+        <p class="login-box-msg" style="color: red" th:text="${error}"></p>
+        <p class="login-box-msg" th:if="${registerSuccess}">注册成功，去<a href="\login">登录！</a></p>
+        <div class="form-control">
+          <input th:value="${usernameValue}" type="text" id="username" name="username" placeholder="请输入用户名！">
+        </div>
+        <div class="form-control">
+          <ul class="errors">
+            <li th:text="${usernameError}"></li>
+          </ul>
+        </div>
+        <div class="form-control">
+          <input th:value="${emailValue}" type="email" id="email" name="email" placeholder="邮箱不能为空！">
+        </div>
+        <div class="form-control">
+          <ul class="errors">
+            <li th:text="${emailError}"></li>
+          </ul>
+        </div>
+        <div class="form-control">
+          <input type="password" id="password" name="password" placeholder="请输入密码！">
+        </div>
+        <div class="form-control">
+          <ul class="errors">
+            <li th:text="${passwordError}"></li>
+          </ul>
+        </div>
+        <div class="form-control">
+          <input type="password" id="rePwd" name="rePwd" placeholder="请输入确认密码！">
+        </div>
+        <div class="form-control">
+          <ul class="errors">
+            <li th:text="${rePwdError}"></li>
+          </ul>
+        </div>
+        <div class="form-control">
+          <input type="submit" id="submit" name="submit" value="注册">
+        </div>
+      </form>
+      <div>
+        <p class="change-form">已有账号，直接去 <a href="\login\">登录</a></p>
+      </div>
+    </div>
+  </div>
+  <!--内容-->
+</body>
+</html>

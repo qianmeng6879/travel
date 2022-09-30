@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.mxzero.travel.dao.UserDao">
+    <select id="findById" resultType="User">
+        select id, username, password, email, phone, avatar, create_time, admin from user where id = #{id}
+    </select>
+
+    <select id="findAll" resultType="User">
+        select id, username, email, phone, avatar, create_time, admin from user
+    </select>
+
+    <select id="findSplit" resultType="User">
+        select id, username, email, phone, avatar, create_time, admin from user limit #{current}, #{size}
+    </select>
+
+    <select id="findByEmail" resultType="User">
+        select id, username, password, email, phone, avatar, create_time, admin, salt from user where email = #{email}
+    </select>
+    <select id="findByPhone" resultType="User">
+        select id, username, password, email, phone, avatar, create_time, admin, salt from user where phone = #{phone}
+    </select>
+
+    <insert id="doCreate" parameterType="User" useGeneratedKeys="true" keyColumn="id">
+        insert into user(username, password, email, create_time, salt) values(#{username}, #{password}, #{email}, now(),
+        #{salt})
+    </insert>
+
+    <update id="doUpdate" parameterType="User">
+        update user set update_time = now()
+        <if test="username != null">
+            ,username = #{username}
+        </if>
+        <if test="password != null">
+            ,password = #{password}
+        </if>
+        <if test="email != email">
+            ,email = #{email}
+        </if>
+        <if test="phone != phone">
+            ,phone = #{phone}
+        </if>
+        <if test="avatar != avatar">
+            ,avatar = #{avatar}
+        </if>
+        <if test="admin != null">
+            ,admin = #{admin}
+        </if>
+        where id = #{id}
+    </update>
+
+    <delete id="doRemove" parameterType="long">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="getCount" resultType="long">
+        select count(*) from user
+    </select>
+
+</mapper>

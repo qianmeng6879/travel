@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.mxzero.travel.dao.SuggestionDao">
+    <select id="findById" resultType="Suggestion">
+        select id, name, email, content, create_time from suggestion where id = #{id}
+    </select>
+
+    <select id="findAll" resultType="Suggestion">
+        select id, name, email, content, create_time from suggestion
+    </select>
+
+    <select id="findSplit" resultType="Suggestion">
+        select id, name, email, content, create_time from suggestion limit #{current},#{size}
+    </select>
+
+    <insert id="doCreate" parameterType="Suggestion">
+        insert into suggestion(name, email, content, create_time) values(#{name}, #{email}, #{content}, now())
+    </insert>
+
+    <delete id="doRemove" parameterType="long">
+        delete from suggestion where id = #{id}
+    </delete>
+
+    <select id="getCount" resultType="_long">
+        select count(*) from suggestion
+    </select>
+</mapper>
+

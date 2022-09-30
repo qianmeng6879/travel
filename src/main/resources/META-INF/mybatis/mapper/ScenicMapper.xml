@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.mxzero.travel.dao.ScenicDao">
+    <resultMap id="scenicResult" type="Scenic">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="star" property="star"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="introduction" property="introduction"/>
+        <result column="content" property="content"/>
+        <result column="address" property="address"/>
+        <result column="hot" property="hot"/>
+        <result column="recommended" property="recommended"/>
+        <result column="area_id" property="areaId"/>
+        <result column="create_time" property="createTime"/>
+        <association property="area" javaType="Area">
+            <id column="area_id" property="id"/>
+            <result column="area_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <select id="findById" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+        where s.id = #{id}
+    </select>
+
+    <select id="findIsRecommended" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+        where s.recommended = 1
+    </select>
+
+    <select id="findIsHot" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+        where s.hot = 1
+    </select>
+
+    <select id="findByAreaIdAndRecommended" resultType="Scenic">
+        select id, title, star, image_url, introduction, address, hot, recommended, create_time
+        from scenic
+        where area_id = #{areaId} and recommended = 1
+    </select>
+
+    <select id="findAll" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+    </select>
+
+    <select id="findSplit" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+        limit #{current},#{size}
+    </select>
+
+    <select id="findSplitByAreaIdAndStar" resultMap="scenicResult">
+        select
+        s.id, s.title, s.star, s.image_url, s.introduction, s.content, S.address, S.hot, S.recommended, s.create_time,
+        a.id area_id, a.name area_name
+        from scenic s join area a on s.area_id = a.id
+        where s.area_id = #{areaId}
+        <if test="star != null">
+            and star = #{star}
+        </if>
+        limit #{current}, #{size}
+    </select>
+
+    <insert id="doCreate" parameterType="Scenic">
+        insert into
+        scenic(title, star, image_url,
+        introduction, content, address,
+        hot, recommended, area_id, create_time)
+        values
+        (#{title}, #{star}, #{imageUrl},
+        #{introduction},#{content}, #{address},
+        #{hot},#{recommended}, #{areaId}, now())
+    </insert>
+
+    <delete id="doRemove" parameterType="int">
+        delete from scenic where id = #{id}
+    </delete>
+
+    <update id="doUpdate" parameterType="Scenic">
+        update scenic set update_time = now()
+        <if test="title != null">
+            ,title = #{title}
+        </if>
+        <if test="star != null">
+            ,star = #{star}
+        </if>
+        <if test="imageUrl != null">
+            ,image_url = #{imageUrl}
+        </if>
+        <if test="introduction != null">
+            ,introduction = #{introduction}
+        </if>
+        <if test="content != null">
+            ,content = #{content}
+        </if>
+        <if test="address != null">
+            ,address = #{address}
+        </if>
+        <if test="hot != null">
+            ,hot = #{hot}
+        </if>
+        <if test="recommended != null">
+            ,recommended = #{recommended}
+        </if>
+        <if test="areaId != null">
+            ,areaId = #{areaId}
+        </if>
+        where id = #{id}
+    </update>
+
+    <select id="getCount" resultType="int">
+        select count(*) from scenic
+    </select>
+
+    <select id="getCountByAreaIdAndStar" resultType="_int">
+        select count(*) from scenic where area_id = #{areaId}
+        <if test="star != null">
+            and star = #{star}
+        </if>
+    </select>
+
+</mapper>
+
