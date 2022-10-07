@@ -23,6 +23,8 @@
         }
 
 
+
+
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -271,8 +273,12 @@
                                         <a th:href="@{'/admin/scenic/edit/' + ${scenic.id}}"
                                            class="label label-success">编辑</a>
                                         &nbsp;
-                                        <a href="#"
-                                           class="label label-danger">删除</a>
+                                        <form th:id="'remove_form_' + ${scenic.id}" method="post" th:action="@{'/admin/scenic/remove/' + ${scenic.id}}">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button class="label label-danger">
+                                                <a href="#" class="label label-danger" th:onclick="'document:remove_form_' + ${scenic.id} + '.submit();'">删除</a>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -305,6 +311,8 @@
             $("#g-4").addClass("active");
             $("#g-4-2").addClass("active");
         });
+
+
 </script>
 </body>
 </html>

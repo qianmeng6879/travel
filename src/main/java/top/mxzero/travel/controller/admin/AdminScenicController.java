@@ -4,15 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import top.mxzero.travel.service.AreaService;
 import top.mxzero.travel.service.ScenicService;
 import top.mxzero.travel.vo.Area;
@@ -48,6 +47,12 @@ public class AdminScenicController {
     @Autowired
     private AreaService areaService;
 
+    /**
+     * 景区列表
+     *
+     * @param page 当前页
+     * @param size 每页大小
+     */
     @RequestMapping("list")
     public ModelAndView scenicListPage(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -58,6 +63,32 @@ public class AdminScenicController {
         mav.addAllObjects(split);
         mav.setViewName("admin/scenic/scenic_list");
         return mav;
+    }
+
+    /**
+     * 修改景区信息
+     *
+     * @param id 要修改的景区ID
+     */
+    @PutMapping("edit/{id}")
+    public String editScenicAction(@PathVariable("id") Integer id, Scenic scenic, Model model) {
+        return "redirect:/admin/scenic/edit/" + id;
+    }
+
+    /**
+     * 删除景区
+     *
+     * @param id 景区ID
+     */
+    @DeleteMapping("remove/{id}")
+    public String removeScenicAction(@PathVariable("id") Integer id, RedirectAttributes model) {
+        boolean result = scenicService.remove(id);
+        if (result) {
+            model.addAttribute("message", "删除成功");
+        } else {
+            model.addAttribute("error", "删除失败");
+        }
+        return "redirect:/admin/scenic/list";
     }
 
     @RequestMapping("edit/{id}")
