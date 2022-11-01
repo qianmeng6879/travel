@@ -1,6 +1,7 @@
 package top.mxzero.travel;
 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,6 +11,10 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
-@ComponentScan(value = {"top.mxzero.travel.service","top.mxzero.travel.config"})
+@ComponentScans({
+        @ComponentScan("top.mxzero.travel.service"),
+        @ComponentScan("top.mxzero.travel.config"),
+        @ComponentScan("top.mxzero.travel.listener")
+})
 public class SpringConfig {
 }

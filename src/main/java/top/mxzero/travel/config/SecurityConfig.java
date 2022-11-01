@@ -54,5 +54,4 @@ public class SecurityConfig {
         LOGGER.info("password:{}", password);
         return passwordEncoder;
     }
-
 }
