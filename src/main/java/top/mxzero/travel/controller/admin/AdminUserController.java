@@ -31,7 +31,7 @@ public class AdminUserController {
     @RequestMapping("list")
     public ModelAndView userList(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "15") int size
     ) {
 
         Map<String, Object> split = userService.split(page, size);

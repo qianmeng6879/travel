@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.mxzero.travel.dao.ScenicDao;
 import top.mxzero.travel.service.ScenicService;
+import top.mxzero.travel.vo.Area;
 import top.mxzero.travel.vo.Scenic;
 
 import java.util.HashMap;
@@ -46,22 +47,16 @@ public class ScenicServiceImpl implements ScenicService {
     }
 
     @Override
-    public Map<String, Object> split(int page, int size) {
-
-        List<Scenic> data = scenicDao.findSplit((page - 1) * size, size);
-        int count = scenicDao.getCount();
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", data);
-        map.put("cp", page);
-        map.put("size", data.size());
-        map.put("total", count);
-        if (count % size == 0) {
-            map.put("totalPage", count / size);
-        } else {
-            map.put("totalPage", count / size + 1);
-        }
-        return map;
+    public Map<String, Object> split(int currentPage, int pageSize) {
+        List<Scenic> split = scenicDao.findSplit((currentPage - 1) * pageSize, pageSize);
+        long count = scenicDao.getCount();
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", split);
+        result.put("dataSize", split.size());
+        result.put("currentPage", currentPage);
+        result.put("pageSize", pageSize);
+        result.put("totalPage", (count % pageSize != 0) ? count / pageSize + 1 : count / pageSize);
+        return result;
     }
 
     @Override

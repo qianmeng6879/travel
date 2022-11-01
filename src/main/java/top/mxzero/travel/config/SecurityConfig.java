@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests().antMatchers("/user/**").authenticated()
-                .and().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
+//                .and().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
                 .and().authorizeRequests().antMatchers("/admin/pwd/**").hasRole("ADMIN")
                 .and().authorizeRequests().antMatchers("/scenic/**").authenticated()
                 .and().authorizeRequests().antMatchers("/collect/**").authenticated()

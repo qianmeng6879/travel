@@ -48,32 +48,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> split(int page, int size) {
+    public Map<String, Object> split(int currentPage, int pageSize) {
 
-        List<User> userList = userDao.findSplit((page - 1) * size, size);
+        List<User> split = userDao.findSplit((currentPage - 1) * pageSize, pageSize);
         long count = userDao.getCount();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", userList);
-        map.put("cp", page);
-        map.put("size", userList.size());
-        map.put("total", count);
-        if (count % size == 0) {
-            map.put("totalPage", count / size);
-        } else {
-            map.put("totalPage", count / size + 1);
-        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", split);
+        result.put("dataSize", split.size());
+        result.put("currentPage", currentPage);
+        result.put("pageSize", pageSize);
+        result.put("totalPage", (count % pageSize != 0) ? count / pageSize + 1 : count / pageSize);
 
-        return map;
+        return result;
     }
 
     @Override
-    public boolean save(User user) {
-        if (userDao.findByEmail(user.getEmail()) != null) {
-            throw new ServiceException("该邮箱已注册");
-        }
+        public boolean save(User user) {
+            if (userDao.findByEmail(user.getEmail()) != null) {
+                throw new ServiceException("该邮箱已注册");
+            }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userDao.doCreate(user) > 0;
     }

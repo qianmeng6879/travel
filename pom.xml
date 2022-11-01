@@ -13,6 +13,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <spring.version>5.3.22</spring.version>
         <mysql.version>8.0.29</mysql.version>
+        <mybatis.version>3.5.9</mybatis.version>
     </properties>
 
     <packaging>war</packaging>
@@ -145,7 +146,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.9</version>
+            <version>${mybatis.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

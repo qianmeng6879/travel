@@ -21,8 +21,13 @@
         select id, name, introduction, recommended, create_time from area
     </select>
 
+    <select id="findSplit" resultType="Area">
+        select id, name, introduction, recommended, create_time from area limit #{current}, #{size}
+    </select>
+
     <insert id="doCreate" parameterType="Area">
-        insert into area(name, introduction, recommended, create_time) values(#{name}, #{introduction}, #{recommended}, now())
+        insert into area(name, introduction, recommended, create_time) values(#{name}, #{introduction}, #{recommended},
+        now())
     </insert>
 
     <delete id="doRemove" parameterType="int">
@@ -42,6 +47,10 @@
         </if>
         where id = #{id}
     </update>
+
+    <select id="getCount" resultType="long">
+        select count(*) from area
+    </select>
 
 </mapper>
 

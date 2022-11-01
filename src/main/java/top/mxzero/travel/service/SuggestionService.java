@@ -32,9 +32,10 @@ public interface SuggestionService {
      * @param page 当前页
      * @param size 每页大小
      * @return 以Map封装分页数据
-     * key = currentPage 当前也
+     * key = currentPage 当前页
      * key = totalPage 总页数
-     * key = size 当前页记录数量
+     * key = pageSize 需要获取记录数量
+     * key = size 当前记录数量
      * key = data 记录数据
      */
     Map<String, Object> split(int page, int size);

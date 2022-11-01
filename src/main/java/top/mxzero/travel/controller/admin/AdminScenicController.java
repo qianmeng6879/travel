@@ -80,7 +80,7 @@ public class AdminScenicController {
      *
      * @param id 景区ID
      */
-    @DeleteMapping("remove/{id}")
+//    @DeleteMapping("remove/{id}")
     public String removeScenicAction(@PathVariable("id") Integer id, RedirectAttributes model) {
         boolean result = scenicService.remove(id);
         if (result) {

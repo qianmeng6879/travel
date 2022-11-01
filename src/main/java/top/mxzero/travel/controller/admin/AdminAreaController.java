@@ -15,6 +15,7 @@ import top.mxzero.travel.vo.Area;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zero
@@ -30,11 +31,14 @@ public class AdminAreaController {
     private AreaService areaService;
 
     @RequestMapping("list")
-    public ModelAndView areaListPage() {
-        List<Area> list = areaService.list();
+    public ModelAndView areaListPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "15") int size
+    ) {
+        Map<String, Object> split = areaService.split(page, size);
 
         ModelAndView mav = new ModelAndView();
-        mav.addObject("areaList", list);
+        mav.addAllObjects(split);
         mav.setViewName("admin/area/area_list");
         return mav;
     }

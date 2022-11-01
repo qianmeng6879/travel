@@ -31,15 +31,16 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public Map<String, Object> split(int page, int size) {
-        List<Suggestion> split = suggestionDao.findSplit((page - 1) * size, size);
+    public Map<String, Object> split(int currentPage, int pageSize) {
+        List<Suggestion> split = suggestionDao.findSplit((currentPage - 1) * pageSize, pageSize);
         long count = suggestionDao.getCount();
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", split);
-        result.put("size", split.size());
-        result.put("currentPage", page);
-        result.put("totalPage", count / page);
+        result.put("dataSize", split.size());
+        result.put("currentPage", currentPage);
+        result.put("pageSize", pageSize);
+        result.put("totalPage", (count % pageSize != 0) ? count / pageSize + 1 : count / pageSize);
         return result;
     }
 

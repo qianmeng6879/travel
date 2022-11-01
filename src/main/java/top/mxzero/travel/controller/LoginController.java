@@ -16,7 +16,6 @@ import top.mxzero.travel.vo.User;
 public class LoginController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";

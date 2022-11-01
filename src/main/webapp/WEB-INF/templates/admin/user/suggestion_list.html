@@ -254,7 +254,7 @@
                                     <th>发布时间</th>
                                     <th>操作事项</th>
                                 </tr>
-                                <tr th:each="suggestion:${suggestionList}">
+                                <tr th:each="suggestion:${data}">
                                     <td th:text="${suggestion.id}"></td>
                                     <td th:text="${suggestion.name}"></td>
                                     <td th:text="${suggestion.email}"></td>
@@ -270,11 +270,32 @@
                         </div>
                         <div class="box-footer clearfix">
                             <ul class="pagination pagination-sm no-margin pull-right">
-                                <li><a href="/admin/suggestion/list?page=1">首页</a></li>
-                                <li class="disabled"><a href="#">上一页</a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <li class="disabled"><a href="#">下一页</a></li>
-                                <li><a href="/admin/suggestion/list?page=1">尾页</a></li>
+                                <li><a th:href="@{'/admin/suggestion/list?page=1&size=' + ${pageSize}}">首页</a></li>
+
+                                <li th:if="${#strings.equals(currentPage, 1)}" class="disabled">
+                                    <a>上一页</a>
+                                </li>
+                                <li th:unless="${#strings.equals(currentPage, 1)}">
+                                    <a th:href="@{'/admin/suggestion/list?page=' + ${currentPage - 1} + '&size=' + ${pageSize}}">上一页</a>
+                                </li>
+
+                                <th:block th:each="page:${#numbers.sequence(1, totalPage)}">
+                                    <li th:if="${#strings.equals(page, currentPage)}"  class="active">
+                                        <a th:text="${page}"></a>
+                                    </li>
+                                    <li th:unless="${#strings.equals(page, currentPage)}">
+                                        <a th:href="@{'/admin/suggestion/list?page=' + ${page} + '&size=' + ${pageSize}}" th:text="${page}"></a>
+                                    </li>
+                                </th:block>
+
+                                <li th:if="${#strings.equals(currentPage, totalPage)}" class="disabled">
+                                    <a>下一页</a>
+                                </li>
+                                <li th:unless="${#strings.equals(currentPage, totalPage)}">
+                                    <a th:href="@{'/admin/suggestion/list?page=' + ${currentPage + 1}} + '&size=' + ${pageSize}">下一页</a>
+                                </li>
+
+                                <li><a th:href="@{'/admin/suggestion/list?page=' + ${totalPage} + '&size=' + ${pageSize}}">尾页</a></li>
                             </ul>
                         </div>
                     </div>
@@ -295,8 +316,6 @@
         $("#g-2").addClass("active");
         $("#g-2-2").addClass("active");
     });
-
-
 </script>
 </body>
 </html>

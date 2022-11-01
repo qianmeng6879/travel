@@ -33,6 +33,7 @@ public interface ScenicService {
      * @return 以Map形式返回数据
      * key = currentPage 当前页
      * key = totalPage 总页数
+     * key = pageSize 请求的每页大小
      * key = size 当前页数据大小
      * key = data 当前页数据
      */

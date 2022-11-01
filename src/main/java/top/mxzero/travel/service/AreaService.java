@@ -4,6 +4,7 @@ import top.mxzero.travel.exception.ServiceException;
 import top.mxzero.travel.vo.Area;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zero
@@ -34,6 +35,8 @@ public interface AreaService {
      * @return 以List形式返回VO对象
      */
     List<Area> getIsRecommended(Integer size);
+
+    Map<String, Object> split(int currentPage, int pageSize);
 
     List<Area> list();
 
