@@ -249,6 +249,7 @@
                                 <tr>
                                     <th>编号</th>
                                     <th>昵称</th>
+                                    <th>IP地址</th>
                                     <th>邮箱</th>
                                     <th>内容</th>
                                     <th>发布时间</th>
@@ -257,6 +258,7 @@
                                 <tr th:each="suggestion:${data}">
                                     <td th:text="${suggestion.id}"></td>
                                     <td th:text="${suggestion.name}"></td>
+                                    <td th:text="${suggestion.ipAddr}"></td>
                                     <td th:text="${suggestion.email}"></td>
                                     <td th:text="${suggestion.content}"></td>
                                     <td th:text="${#dates.format(suggestion.createTime, 'yyyy-MM-dd HH:mm:dd')}"></td>
