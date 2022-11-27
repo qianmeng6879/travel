@@ -121,7 +121,7 @@
         <a href="https://beian.miit.gov.cn" target="_blank"  style="color: #000">蜀ICP备2021022255号-2</a>
     </p>
 </div>
-<script src="/static/base/js/script.js"></script>
+<script src="/static/base/js/bootstrap.js"></script>
 <script th:src="@{/static/layer/layer.js}"></script>
 <script>
     $(document).ready(function () {
@@ -143,7 +143,7 @@
                         $(".collect-button").empty();               // 清空按钮区文字
                         $(".collect-button").append("已收藏");      // 填充文字
                     } else {
-                        layer.msg("您已收藏",{icon:2,time:2000});   // 提示已收藏
+                        layer.msg("请先登录",{icon:2,time:2000});   // 提示已收藏
                     }
                 }
             })
