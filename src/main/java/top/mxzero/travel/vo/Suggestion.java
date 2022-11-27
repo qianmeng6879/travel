@@ -14,6 +14,8 @@ public class Suggestion {
     private String content;
     private Date createTime;
 
+    private String ipAddr;
+
     public Long getId() {
         return id;
     }
@@ -54,6 +56,14 @@ public class Suggestion {
         this.createTime = createTime;
     }
 
+    public String getIpAddr() {
+        return ipAddr;
+    }
+
+    public void setIpAddr(String ipAddr) {
+        this.ipAddr = ipAddr;
+    }
+
     @Override
     public String toString() {
         return "Suggestion{" +
@@ -62,6 +72,7 @@ public class Suggestion {
                 ", email='" + email + '\'' +
                 ", content='" + content + '\'' +
                 ", createTime=" + createTime +
+                ", ipAddr='" + ipAddr + '\'' +
                 '}';
     }
 }

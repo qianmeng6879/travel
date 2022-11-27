@@ -5,19 +5,19 @@
 
 <mapper namespace="top.mxzero.travel.dao.SuggestionDao">
     <select id="findById" resultType="Suggestion">
-        select id, name, email, content, create_time from suggestion where id = #{id}
+        select id, name, email, content, create_time, ip_addr from suggestion where id = #{id}
     </select>
 
     <select id="findAll" resultType="Suggestion">
-        select id, name, email, content, create_time from suggestion
+        select id, name, email, content, create_time, ip_addr from suggestion
     </select>
 
     <select id="findSplit" resultType="Suggestion">
-        select id, name, email, content, create_time from suggestion limit #{current},#{size}
+        select id, name, email, content, create_time, ip_addr from suggestion limit #{current},#{size}
     </select>
 
     <insert id="doCreate" parameterType="Suggestion">
-        insert into suggestion(name, email, content, create_time) values(#{name}, #{email}, #{content}, now())
+        insert into suggestion(name, email, content, ip_addr, create_time) values(#{name}, #{email}, #{content}, #{ipAddr}, now())
     </insert>
 
     <delete id="doRemove" parameterType="long">
