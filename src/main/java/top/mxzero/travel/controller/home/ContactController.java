@@ -33,7 +33,7 @@ public class ContactController {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if(requestAttributes != null){
             HttpServletRequest request = requestAttributes.getRequest();
-            String ipAddr = request.getHeader("x-forwarded.for");
+            String ipAddr = request.getHeader("x-forwarded-for");
             if(!StringUtils.hasLength(ipAddr)){
                 ipAddr = request.getRemoteAddr();
             }
