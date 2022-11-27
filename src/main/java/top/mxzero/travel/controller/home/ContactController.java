@@ -3,11 +3,15 @@ package top.mxzero.travel.controller.home;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import top.mxzero.travel.dao.SuggestionDao;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import top.mxzero.travel.service.SuggestionService;
 import top.mxzero.travel.vo.Suggestion;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zero
@@ -26,6 +30,17 @@ public class ContactController {
 
     @PostMapping("/contact/suggestion")
     public String sendSuggestion(Suggestion suggestion, Model model) {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if(requestAttributes != null){
+            HttpServletRequest request = requestAttributes.getRequest();
+            String ipAddr = request.getHeader("x-forwarded.for");
+            if(!StringUtils.hasLength(ipAddr)){
+                ipAddr = request.getRemoteAddr();
+            }
+
+            suggestion.setName(ipAddr +" " + suggestion.getName());
+        }
+
         boolean result = suggestionService.save(suggestion);
         if (result) {
             model.addAttribute("message", "发送建议成功!");
