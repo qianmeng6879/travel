@@ -3,11 +3,21 @@ package top.mxzero.travel.controller.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.mxzero.travel.service.AuthService;
+import top.mxzero.travel.vo.User;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zero
@@ -17,15 +27,18 @@ import top.mxzero.travel.service.AuthService;
 @Controller
 public class QQAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(QQAuthController.class);
-
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    protected AuthenticationManager authenticationManager;
 
     @GetMapping("/oauth2/qq_fallback")
     public String qqAuthFallback(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
-            @RequestParam(value = "msg", required = false) String msg
+            @RequestParam(value = "msg", required = false) String msg,
+            HttpServletRequest request
     ) {
 
         // 请求错误
@@ -33,9 +46,12 @@ public class QQAuthController {
             LOGGER.warn("QQ auth error:msg:{},code{}", msg, code);
         }
 
-        LOGGER.info("state:{}", state);
+        User user = authService.authorize(code);
 
-        authService.authorize(code);
+        LOGGER.info("controllter:{}", user);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
+        token.setDetails(user);
+        SecurityContextHolder.getContext().setAuthentication(token);
 
         return "redirect:/";
     }

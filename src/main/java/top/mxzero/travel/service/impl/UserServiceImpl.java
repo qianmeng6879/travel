@@ -69,12 +69,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean save(User user) {
-        if (userDao.findByEmail(user.getEmail()) != null) {
+        if (user.getEmail() != null && userDao.findByEmail(user.getEmail()) != null) {
             throw new ServiceException("该邮箱已注册");
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         boolean result = userDao.doCreate(user) > 0;
         if (result) {
             LOGGER.info("userServiceImpl save user:{}", user);

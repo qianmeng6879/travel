@@ -59,17 +59,17 @@ public class QQAuthService implements AuthService {
     private UserService userService;
 
     @Override
-    public boolean authorize(String code) {
+    public User authorize(String code) {
         String accessToken = this.getAccessToken(code);
         if (!StringUtils.hasLength(accessToken)) {
             LOGGER.error("获取access失败,code:{}", code);
-            return false;
+            throw new ServiceException("获取AccessToken失败");
         }
 
         String openId = getOpenId(accessToken, code);
         if (!StringUtils.hasLength(openId)) {
             LOGGER.error("获取openId失败,code:{},access_token:{}", code, accessToken);
-            return false;
+            throw new ServiceException("获取openId失败");
         }
 
         QQAuthInfo authInfo = qqAuthInfoDao.selectByOpenId(openId);
@@ -80,26 +80,25 @@ public class QQAuthService implements AuthService {
             Map<String, String> userinfoMap = getUserinfo(accessToken, openId);
             User user = new User();
             user.setPassword("0");
-            user.setAdmin(false);
-            user.setCreateTime(new Date());
             user.setUsername(userinfoMap.get("nickname"));
             user.setAvatar(userinfoMap.get("figureurl_2"));
             boolean result = userService.save(user);
 
-            LOGGER.info("add user userId:{}", user.getId());
-
-            if (result) {
-                QQAuthInfo qqAuthInfo = new QQAuthInfo();
-                qqAuthInfo.setOpenId(openId);
-                qqAuthInfo.setUserId(user.getId());
-                boolean addQQAuthResult = qqAuthInfoDao.insert(qqAuthInfo) > 0;
-                if (!addQQAuthResult) {
-                    throw new ServiceException("新增用户失败");
-                }
-                LOGGER.info("add auth info user_id:{},open_id:{}", user.getId(), openId);
-                return true;
+            if (!result) {
+                throw new ServiceException("新增用户失败");
             }
-            return false;
+
+            LOGGER.info("add user userId:{}", user.getId());
+            QQAuthInfo qqAuthInfo = new QQAuthInfo();
+            qqAuthInfo.setOpenId(openId);
+            qqAuthInfo.setUserId(user.getId());
+            boolean addQQAuthResult = qqAuthInfoDao.insert(qqAuthInfo) > 0;
+            if (!addQQAuthResult) {
+                LOGGER.error("新增QQ Auth 信息失败");
+                throw new ServiceException("新增用户失败");
+            }
+            LOGGER.info("add auth info user_id:{}, auth_info_id:{}", user.getId(), qqAuthInfo.getId());
+            return user;
         }
 
         User user = userService.get(authInfo.getUserId());
@@ -109,7 +108,7 @@ public class QQAuthService implements AuthService {
         }
 
         LOGGER.info("用户登录:{}", user);
-        return true;
+        return user;
     }
 
     private String getAccessToken(String code) {
@@ -128,18 +127,14 @@ public class QQAuthService implements AuthService {
             HttpEntity entity = response.getEntity();
             // access_token=***&expires_in=***&refresh_token=***
             String content = EntityUtils.toString(entity);
-            LOGGER.info("get accessToken content:{}", content);
 
             Map<String, String> data = new HashMap<>();
             for (String dataMap : content.split("&")) {
                 String key = dataMap.substring(0, dataMap.indexOf("="));
                 String value = dataMap.substring(dataMap.indexOf("=") + 1);
-                LOGGER.info("{}:{}", key, value);
                 data.put(key, value);
             }
             LOGGER.info("access_token={}", data.get("access_token"));
-            LOGGER.debug("refresh_token={}", data.get("refresh_token"));
-            LOGGER.debug("expires_in={}", data.get("expires_in"));
             return data.get("access_token");
         } catch (Exception ignored) {
         }
@@ -160,12 +155,9 @@ public class QQAuthService implements AuthService {
             HttpEntity entity = response.getEntity();
             // {"client_id":"**","openid":"**"}
             String content = EntityUtils.toString(entity);
-            LOGGER.info("get openId content:{}", content);
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map data = objectMapper.readValue(content, Map.class);
-
-            LOGGER.info("openId:{}", data.get("openid"));
             return data.get("openid").toString();
         } catch (Exception ignored) {
         }
@@ -185,13 +177,6 @@ public class QQAuthService implements AuthService {
             CloseableHttpResponse response = request.execute(httpGet);
             HttpEntity entity = response.getEntity();
             String content = EntityUtils.toString(entity);
-
-            // {
-            //   "ret":0,
-            //   "msg":"",
-            //   "nickname":"YOUR_NICK_NAME",
-            //}
-            LOGGER.info("get userinfo content:{}", content);
 
             Map data = OBJECT_MAPPER.readValue(content, Map.class);
 

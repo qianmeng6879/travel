@@ -46,7 +46,12 @@ public class ScenicDetailController {
         // 判断当前用户是否登录
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
-            User user = (User) authentication.getPrincipal();
+            User user;
+            if (authentication instanceof User) {
+                user = (User) authentication.getPrincipal();
+            } else {
+                user = (User) authentication.getDetails();
+            }
             Collect collect = new Collect();
             collect.setScenicId(scenic.getId());
             collect.setUserId(user.getId());

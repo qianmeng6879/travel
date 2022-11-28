@@ -23,7 +23,7 @@
     </select>
 
     <insert id="doCreate" parameterType="User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        insert into user(username, password, email, create_time, salt) values(#{username}, #{password}, #{email}, now(),
+        insert into user(username, password, email, avatar, create_time, salt) values(#{username}, #{password}, #{email}, #{avatar}, now(),
         #{salt})
     </insert>
 

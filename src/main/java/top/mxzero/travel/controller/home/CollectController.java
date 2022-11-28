@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import top.mxzero.travel.vo.Collect;
 import top.mxzero.travel.vo.Scenic;
 import top.mxzero.travel.vo.User;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,14 @@ public class CollectController {
     @RequestMapping("list")
     public ModelAndView collectList() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+
+        LOGGER.info("test:{}", (authentication instanceof User));
+        User user;
+        if (authentication instanceof User) {
+            user = (User) authentication.getPrincipal();
+        } else {
+            user = (User) authentication.getDetails();
+        }
         List<Collect> collectList = collectService.list(user.getId());
 
         List<Scenic> scenicList = new ArrayList<>();
@@ -65,7 +74,12 @@ public class CollectController {
     @RequestMapping("cancel")
     public Object cancelCollect(@RequestParam("id") Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+        User user;
+        if (authentication instanceof User) {
+            user = (User) authentication.getPrincipal();
+        } else {
+            user = (User) authentication.getDetails();
+        }
         Collect collect = new Collect();
         collect.setUserId(user.getId());
         collect.setScenicId(id);
@@ -99,7 +113,12 @@ public class CollectController {
         LOGGER.info("collect:{}", collect);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+        User user;
+        if (authentication instanceof User) {
+            user = (User) authentication.getPrincipal();
+        } else {
+            user = (User) authentication.getDetails();
+        }
         collect.setUserId(user.getId());
 
         Map<String, Object> map = new HashMap<>();

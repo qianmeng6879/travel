@@ -1,5 +1,7 @@
 package top.mxzero.travel.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +20,14 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/user/*")
 public class UserController extends AbstractBaseAction {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
     @ResponseBody
     @RequestMapping("current")
     public Principal currentUser(Principal principal) {
+        LOGGER.info("principal:{}", principal);
         return principal;
     }
 }

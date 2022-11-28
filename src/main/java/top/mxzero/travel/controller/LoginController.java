@@ -24,7 +24,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage() {
-        publisher.publishEvent(new MessageEvent(this, "hello world"));
+//        publisher.publishEvent(new MessageEvent(this, "hello world"));
         return "login";
     }
 
