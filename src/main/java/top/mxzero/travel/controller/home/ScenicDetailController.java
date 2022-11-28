@@ -13,6 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import top.mxzero.travel.service.CollectService;
 import top.mxzero.travel.service.ScenicService;
+import top.mxzero.travel.util.UserUtil;
 import top.mxzero.travel.vo.Collect;
 import top.mxzero.travel.vo.Scenic;
 import top.mxzero.travel.vo.User;
@@ -45,13 +46,8 @@ public class ScenicDetailController {
 
         // 判断当前用户是否登录
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
-            User user;
-            if (authentication instanceof User) {
-                user = (User) authentication.getPrincipal();
-            } else {
-                user = (User) authentication.getDetails();
-            }
+        if (UserUtil.currentUser() != null) {
+            User user = UserUtil.currentUser();
             Collect collect = new Collect();
             collect.setScenicId(scenic.getId());
             collect.setUserId(user.getId());

@@ -1,5 +1,7 @@
 package top.mxzero.travel.util;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import top.mxzero.travel.vo.User;
 
@@ -10,20 +12,25 @@ import top.mxzero.travel.vo.User;
  */
 @Component
 public class UserUtil {
-    private static final ThreadLocal<User> threadLocal = new ThreadLocal<>();
 
     private UserUtil() {
     }
 
     public static User currentUser() {
-        return threadLocal.get();
-    }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user;
 
-    public static void set(User user) {
-        threadLocal.set(user);
-    }
+        if (!authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            return null;
+        }
 
-    public static void remove() {
-        threadLocal.remove();
+        if (authentication instanceof User) {
+            user = (User) authentication;
+        } else if (authentication.getPrincipal() instanceof User) {
+            user = (User) authentication.getPrincipal();
+        } else {
+            user = (User) authentication.getDetails();
+        }
+        return user;
     }
 }
