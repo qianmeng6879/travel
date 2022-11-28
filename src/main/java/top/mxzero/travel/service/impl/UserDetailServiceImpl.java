@@ -16,7 +16,6 @@ import top.mxzero.travel.vo.User;
  * @email qianmeng6879@163.com
  * @since 2022/9/23
  */
-@Service
 public class UserDetailServiceImpl implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailServiceImpl.class);
 

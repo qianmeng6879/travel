@@ -8,6 +8,9 @@
 application-dev.yml
 application-prod.yml
 
+db.properties
+auth.properties
+
 out/
 target/
 test/

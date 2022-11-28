@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import top.mxzero.travel.service.impl.UserDetailServiceImpl;
 
 /**
  * @author zero
@@ -24,8 +25,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailServiceImpl();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,7 +46,7 @@ public class SecurityConfig {
 //                    response.sendRedirect("/login");
 //                })
                 .and().csrf().disable()
-                .userDetailsService(userDetailsService)
+                .userDetailsService(userDetailsService())
                 .build();
     }
 

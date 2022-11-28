@@ -6,8 +6,6 @@ package top.mxzero.travel.service;
  * @since 2022/11/28
  */
 public interface AuthService {
-    public String getAccessToken(String code);
-
-    public String getOpenId();
+    boolean authorize(String code);
 
 }

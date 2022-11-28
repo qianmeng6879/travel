@@ -22,7 +22,7 @@
         select id, username, password, email, phone, avatar, create_time, admin, salt from user where phone = #{phone}
     </select>
 
-    <insert id="doCreate" parameterType="User" useGeneratedKeys="true" keyColumn="id">
+    <insert id="doCreate" parameterType="User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into user(username, password, email, create_time, salt) values(#{username}, #{password}, #{email}, now(),
         #{salt})
     </insert>

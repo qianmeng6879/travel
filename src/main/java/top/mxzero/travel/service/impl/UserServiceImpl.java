@@ -1,5 +1,7 @@
 package top.mxzero.travel.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.UUID;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserDao userDao;
 
@@ -64,14 +68,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-        public boolean save(User user) {
-            if (userDao.findByEmail(user.getEmail()) != null) {
-                throw new ServiceException("该邮箱已注册");
-            }
+    public boolean save(User user) {
+        if (userDao.findByEmail(user.getEmail()) != null) {
+            throw new ServiceException("该邮箱已注册");
+        }
 
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return userDao.doCreate(user) > 0;
+        boolean result = userDao.doCreate(user) > 0;
+        if (result) {
+            LOGGER.info("userServiceImpl save user:{}", user);
+        }
+        return result;
     }
 
     @Override

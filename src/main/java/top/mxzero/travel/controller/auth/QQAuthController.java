@@ -2,10 +2,12 @@ package top.mxzero.travel.controller.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import top.mxzero.travel.service.AuthService;
 
 /**
  * @author zero
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class QQAuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(QQAuthController.class);
+
+    @Autowired
+    private AuthService authService;
 
     @GetMapping("/oauth2/qq_fallback")
     public String qqAuthFallback(
@@ -28,10 +33,10 @@ public class QQAuthController {
             LOGGER.warn("QQ auth error:msg:{},code{}", msg, code);
         }
 
-        // 通过Authorization Code获取Access Token
+        LOGGER.info("state:{}", state);
 
-        //获取用户OpenID_OAuth2.0
+        authService.authorize(code);
 
-        return "/";
+        return "redirect:/";
     }
 }

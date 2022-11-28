@@ -15,5 +15,6 @@
         <mapper resource="META-INF/mybatis/mapper/ScenicMapper.xml"/>
         <mapper resource="META-INF/mybatis/mapper/SuggestionMapper.xml"/>
         <mapper resource="META-INF/mybatis/mapper/CollectMapper.xml"/>
+        <mapper resource="META-INF/mybatis/mapper/QQAuthInfoMapper.xml"/>
     </mappers>
 </configuration>
