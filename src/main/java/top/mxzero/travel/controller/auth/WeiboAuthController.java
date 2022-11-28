@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,16 +22,16 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2022/11/28
  */
 @Controller
-public class QQAuthController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QQAuthController.class);
+public class WeiboAuthController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeiboAuthController.class);
     @Autowired
-    @Qualifier("qqAuthService")
+    @Qualifier("weiboAuthService")
     private AuthService authService;
 
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-    @GetMapping("/oauth2/qq_fallback")
+    @GetMapping("/oauth2/wb_fallback")
     public String qqAuthFallback(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
@@ -44,7 +41,7 @@ public class QQAuthController {
 
         // 请求错误
         if (StringUtils.hasLength(msg)) {
-            LOGGER.warn("QQ auth error:msg:{},code{}", msg, code);
+            LOGGER.warn("Weibo auth error:msg:{},code{}", msg, code);
         }
 
         User user = authService.authorize(code);

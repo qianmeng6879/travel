@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -13,54 +14,49 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import top.mxzero.travel.dao.QQAuthInfoDao;
+import top.mxzero.travel.dao.WeiboAuthInfoDao;
 import top.mxzero.travel.exception.ServiceException;
 import top.mxzero.travel.service.AuthService;
 import top.mxzero.travel.service.UserService;
-import top.mxzero.travel.vo.QQAuthInfo;
 import top.mxzero.travel.vo.User;
+import top.mxzero.travel.vo.WeiboAuthInfo;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * @author zero
  * @email qianmeng6879@163.com
  * @since 2022/11/28
  */
-@Primary
 @Service
-@Qualifier("qqAuthService")
-@PropertySource("classpath:auth.properties")
-public class QQAuthService implements AuthService {
+@Qualifier("weiboAuthService")
+public class WeiboAuthService implements AuthService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeiboAuthService.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final Logger LOGGER = LoggerFactory.getLogger(QQAuthService.class);
-    @Value("${auth.qq.appid}")
+    @Value("${auth.weibo.appid}")
     private String appid;
-    @Value("${auth.qq.appkey}")
+    @Value("${auth.weibo.appkey}")
     private String appkey;
-    @Value("${auth.qq.fallback}")
+    @Value("${auth.weibo.fallback}")
     private String fallback;
-    @Value("${auth.qq.authorizeUrl}")
+    @Value("${auth.weibo.authorizeUrl}")
     private String authorizeUrl;
-    @Value("${auth.qq.accessTokenUrl}")
+    @Value("${auth.weibo.accessTokenUrl}")
     private String accessTokenUrl;
-    @Value("${auth.qq.openIdUrl}")
-    private String openIdUrl;
-    @Value("${auth.qq.userinfoUrl}")
+    @Value("${auth.weibo.uidUrl}")
+    private String uidUrl;
+    @Value("${auth.weibo.userinfoUrl}")
     private String userinfoUrl;
 
     @Autowired
-    private QQAuthInfoDao qqAuthInfoDao;
+    private WeiboAuthInfoDao weiboAuthInfoDao;
 
     @Autowired
     private UserService userService;
+
 
     @Override
     public User authorize(String code) {
@@ -70,22 +66,21 @@ public class QQAuthService implements AuthService {
             throw new ServiceException("获取AccessToken失败");
         }
 
-        String openId = getOpenId(accessToken, code);
-        if (!StringUtils.hasLength(openId)) {
-            LOGGER.error("获取openId失败,code:{},access_token:{}", code, accessToken);
-            throw new ServiceException("获取openId失败");
+        String uid = getUid(accessToken);
+        if (!StringUtils.hasLength(uid)) {
+            LOGGER.error("获取Uid失败,code:{},access_token:{}", code, accessToken);
+            throw new ServiceException("获取Uid失败");
         }
-
-        QQAuthInfo authInfo = qqAuthInfoDao.selectByOpenId(openId);
+        WeiboAuthInfo authInfo = weiboAuthInfoDao.selectByWeiboId(uid);
 
         // 未查询到认证信息，第一次使用QQ登录
         // 新增用户信息，新增qq auth信息
         if (authInfo == null) {
-            Map<String, String> userinfoMap = getUserinfo(accessToken, openId);
+            Map<String, String> userinfoMap = getUserinfo(accessToken, uid);
             User user = new User();
             user.setPassword("0");
-            user.setUsername(userinfoMap.get("nickname"));
-            user.setAvatar(userinfoMap.get("figureurl_2"));
+            user.setUsername(userinfoMap.get("name"));
+            user.setAvatar(userinfoMap.get("avatar_large"));
             boolean result = userService.save(user);
 
             if (!result) {
@@ -93,21 +88,21 @@ public class QQAuthService implements AuthService {
             }
 
             LOGGER.info("add user userId:{}", user.getId());
-            QQAuthInfo qqAuthInfo = new QQAuthInfo();
-            qqAuthInfo.setOpenId(openId);
-            qqAuthInfo.setUserId(user.getId());
-            boolean addQQAuthResult = qqAuthInfoDao.insert(qqAuthInfo) > 0;
+            WeiboAuthInfo weiboAuthInfo = new WeiboAuthInfo();
+            weiboAuthInfo.setWbId(uid);
+            weiboAuthInfo.setUserId(user.getId());
+            boolean addQQAuthResult = weiboAuthInfoDao.insert(weiboAuthInfo) > 0;
             if (!addQQAuthResult) {
-                LOGGER.error("新增QQ Auth 信息失败");
+                LOGGER.error("新增Weibo Auth 信息失败");
                 throw new ServiceException("新增用户失败");
             }
-            LOGGER.info("add auth info user_id:{}, auth_info_id:{}", user.getId(), qqAuthInfo.getId());
+            LOGGER.info("add auth info user_id:{}, auth_info_id:{}", user.getId(), weiboAuthInfo.getId());
             return user;
         }
 
         User user = userService.get(authInfo.getUserId());
         if (user == null) {
-            LOGGER.error("user not found by openId-{}", openId);
+            LOGGER.error("user not found by uid-{}", uid);
             throw new ServiceException("登录失败");
         }
 
@@ -125,80 +120,92 @@ public class QQAuthService implements AuthService {
                     .setParameter("client_secret", appkey)
                     .setParameter("redirect_uri", fallback);
 
-            HttpGet httpGet = new HttpGet(builder.build());
+            HttpPost httpPost = new HttpPost(builder.build());
 
-            CloseableHttpResponse response = request.execute(httpGet);
+            CloseableHttpResponse response = request.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            // access_token=***&expires_in=***&refresh_token=***
+            /*
+             * {
+             *     "access_token": "2.00jhvvpG1vS9gC1ca022e1e7zjhudB",
+             *     "remind_in": "157679999",
+             *     "expires_in": 157679999,
+             *     "uid": "6264196643",
+             *     "isRealName": "true"
+             * }
+             */
             String content = EntityUtils.toString(entity);
-
-            Map<String, String> data = new HashMap<>();
-            for (String dataMap : content.split("&")) {
-                String key = dataMap.substring(0, dataMap.indexOf("="));
-                String value = dataMap.substring(dataMap.indexOf("=") + 1);
-                data.put(key, value);
+            Map data = OBJECT_MAPPER.readValue(content, Map.class);
+            Object accessToken = data.get("access_token");
+            if (accessToken == null) {
+                return null;
             }
-            LOGGER.info("access_token={}", data.get("access_token"));
-            return data.get("access_token");
+            LOGGER.info("access_token:{}", accessToken);
+            return accessToken.toString();
         } catch (Exception ignored) {
         }
 
         return null;
     }
 
-    private String getOpenId(String accessToken, String code) {
+    private String getUid(String accessToken) {
         try (CloseableHttpClient request = HttpClients.createDefault()) {
-            URIBuilder builder = new URIBuilder(openIdUrl);
-            builder
-                    .setParameter("access_token", accessToken)
-                    .setParameter("fmt", "json");
-
+            URIBuilder builder = new URIBuilder(uidUrl);
+            builder.setParameter("access_token", accessToken);
             HttpGet httpGet = new HttpGet(builder.build());
-
             CloseableHttpResponse response = request.execute(httpGet);
             HttpEntity entity = response.getEntity();
-            // {"client_id":"**","openid":"**"}
+            // {"uid":6264196643}
             String content = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map data = objectMapper.readValue(content, Map.class);
-            return data.get("openid").toString();
+            Object uid = data.get("uid");
+            if (uid == null) {
+                return null;
+            }
+            LOGGER.info("Uid:{}", uid);
+            return uid.toString();
         } catch (Exception ignored) {
         }
         return null;
     }
 
-    private Map<String, String> getUserinfo(String accessToken, String openId) {
+    private Map<String, String> getUserinfo(String accessToken, String uid) {
         try (CloseableHttpClient request = HttpClients.createDefault()) {
             URIBuilder builder = new URIBuilder(userinfoUrl);
             builder
-                    .setParameter("oauth_consumer_key", appid)
                     .setParameter("access_token", accessToken)
-                    .setParameter("openid", openId);
+                    .setParameter("uid", uid);
 
             HttpGet httpGet = new HttpGet(builder.build());
 
             CloseableHttpResponse response = request.execute(httpGet);
             HttpEntity entity = response.getEntity();
             String content = EntityUtils.toString(entity);
+
+            /*
+                {
+                    "id": 6264196643,
+                    "idstr": "6264196643",
+                    "screen_name": "浅浅梦汐丷",
+                    "name": "浅浅梦汐丷",
+                    "location": "四川",
+                    "description": "低头不是认识，是要看清自己的路；仰头不是骄傲，是要看清自己的天空。",
+                    "gender": "m",
+                    "avatar_large": "https://tvax1.sinaimg.cn/crop.0.0.1073.1073.180/006PVVHJly8gxy53ajbqxj30tt0tttab.jpg?KID=imgbed,tva&Expires=1669640400&ssig=%2ByfWJ2bBlt"
+                }
+             */
 
             Map data = OBJECT_MAPPER.readValue(content, Map.class);
 
             LOGGER.info(data.toString());
 
-            // 获取用户信息错误
-            if ("0".equals(data.get("ret"))) {
-                LOGGER.warn("get userinfo code:{} error:{}", data.get("ret"), data.get("msg"));
-                return new HashMap<>();
-            }
-
             Map<String, String> map = new HashMap<>();
-            map.put("nickname", data.get("nickname").toString());
-            map.put("figureurl", data.get("figureurl").toString());
-            map.put("figureurl_1", data.get("figureurl_1").toString());
-            map.put("figureurl_2", data.get("figureurl_2").toString());
-            map.put("figureurl_qq_1", data.get("figureurl_qq_1").toString());
-            map.put("figureurl_qq_2", data.get("figureurl_qq_2").toString());
+            map.put("id", data.get("id").toString());
+            map.put("name", data.get("name").toString());
+            map.put("location", data.get("location").toString());
+            map.put("description", data.get("description").toString());
+            map.put("avatar_large", data.get("avatar_large").toString());
             map.put("gender", data.get("gender").toString());
             return map;
         } catch (Exception ignored) {

@@ -16,5 +16,6 @@
         <mapper resource="META-INF/mybatis/mapper/SuggestionMapper.xml"/>
         <mapper resource="META-INF/mybatis/mapper/CollectMapper.xml"/>
         <mapper resource="META-INF/mybatis/mapper/QQAuthInfoMapper.xml"/>
+        <mapper resource="META-INF/mybatis/mapper/WeiboAuthInfoMapper.xml"/>
     </mappers>
 </configuration>

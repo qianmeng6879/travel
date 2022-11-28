@@ -11,66 +11,70 @@
 </head>
 
 <body>
-    <!-- 导航栏开始 -->
-    <div id="toolbar">
-        <a href="/" class="router-link-exact-active router-link-active">
-            <img src=/static/base/images/logo.png class="icon">
-            <h1>e起去旅行</h1>
-        </a>
-        <ul class="links">
-            <li>
-                <a href="/login/" class="">登录</a>
-            </li>
-            <li>
-                <a href="/register/" class="">注册</a>
-            </li>
-        </ul>
-    </div>
-    <!-- 导航栏结束 -->
-    <!--内容-->
-    <div class="container">
-        <div id="login" class="login-container">
-            <form role="form" method="POST" th:action="@{/login}">
-                <div class="form-control">
-                    <input type="text" name="username" id="username" placeholder="请输入邮箱！">
-                </div>
-                <div style="display: none" class="form-control">
-                    <ul class="errors">
-                        <li>邮箱不能为空！</li>
-                    </ul>
-                </div>
-                <div class="form-control">
-                    <input type="password" name="password" id="password" placeholder="请输入密码！">
-                </div>
-                <div style="display: none" class="form-control">
-                    <ul class="errors">
-                        <li>密码不能为空！</li>
-                    </ul>
-                </div>
-                <div class="form-control">
-                    <ul th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}" class="errors">
-                        <li th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></li>
-                    </ul>
-                </div>
-                <div class="form-control">
-                    <input type="submit" id="submit" class="btn btn-primary" value="登录" />
-                </div>
-            </form>
-            <div>
-                <p class="change-form">还没有账号?去 <a href="\register\" class="">注册</a></p>
+<!-- 导航栏开始 -->
+<div id="toolbar">
+    <a href="/" class="router-link-exact-active router-link-active">
+        <img src=/static/base/images/logo.png class="icon">
+        <h1>e起去旅行</h1>
+    </a>
+    <ul class="links">
+        <li>
+            <a href="/login/" class="">登录</a>
+        </li>
+        <li>
+            <a href="/register/" class="">注册</a>
+        </li>
+    </ul>
+</div>
+<!-- 导航栏结束 -->
+<!--内容-->
+<div class="container">
+    <div id="login" class="login-container">
+        <form role="form" method="POST" th:action="@{/login}">
+            <div class="form-control">
+                <input type="text" name="username" id="username" placeholder="请输入邮箱！">
+            </div>
+            <div style="display: none" class="form-control">
+                <ul class="errors">
+                    <li>邮箱不能为空！</li>
+                </ul>
+            </div>
+            <div class="form-control">
+                <input type="password" name="password" id="password" placeholder="请输入密码！">
+            </div>
+            <div style="display: none" class="form-control">
+                <ul class="errors">
+                    <li>密码不能为空！</li>
+                </ul>
+            </div>
+            <div class="form-control">
+                <ul th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}" class="errors">
+                    <li th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></li>
+                </ul>
+            </div>
+            <div class="form-control">
+                <input type="submit" id="submit" class="btn btn-primary" value="登录"/>
+            </div>
+        </form>
+        <div>
+            <p class="change-form">还没有账号?去 <a href="\register\" class="">注册</a></p>
+            <div style="margin: auto; width: 200px">
                 <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102019868&redirect_uri=http://mxzero.top/oauth2/qq_fallback&state=/auth">
-                    <img src="https://wiki.connect.qq.com/wp-content/uploads/2021/01/bt_blue_76X24.png" alt="QQ登录">
+                    <img style="width:48px;height:48px;" src="/static/images/qq.png" alt="QQ登录"></a>
+                <a style="margin-left: 40px;" href="https://api.weibo.com/oauth2/authorize?client_id=2459617706&response_type=code&redirect_uri=http://mxzero.top/oauth2/wb_fallback">
+                    <img style="width:48px;height:48px;" src="https://www.sinaimg.cn/blog/developer/wiki/LOGO_48x48.png" alt="微博登录">
                 </a>
             </div>
         </div>
     </div>
+</div>
 
-    <!--内容-->
-    <div class="footer" style="margin-top: 10px; background:white;">
-        <p style="text-align:center;">
-            <a href="https://beian.miit.gov.cn"  style="color: #000" target="_blank">蜀ICP备2021022255号-2</a>
-        </p>
-    </div>
+<!--内容-->
+<div class="footer" style="margin-top: 10px; background:white;">
+    <p style="text-align:center;">
+        <a href="https://beian.miit.gov.cn" style="color: #000" target="_blank">蜀ICP备2021022255号-2</a>
+    </p>
+</div>
 </body>
 
 </html>
