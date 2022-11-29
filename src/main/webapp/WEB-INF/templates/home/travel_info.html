@@ -118,7 +118,7 @@
 </div>
 <div class="footer" style="margin-top: 10px; background:white;">
     <p style="text-align:center;">
-        <a href="https://beian.miit.gov.cn" target="_blank"  style="color: #000">蜀ICP备2021022255号-2</a>
+        <a href="https://beian.miit.gov.cn" target="_blank" style="color: #000">蜀ICP备2021022255号-2</a>
     </p>
 </div>
 <script src="/static/base/js/bootstrap.js"></script>
@@ -132,23 +132,29 @@
             if(!scenic_id){
                return layer.msg("您已收藏",{icon:2,time:2000});   // 提示已收藏
             }
-
-            $.ajax({                                   // 使用Ajax异步提交
-                url: "/collect/collect", // 提交到的URL
-                type: "POST",                            // 提交方式为GET
-                data:{scenicId: scenic_id},             // 传递参数
-                success: function (res) {               // 操作成功后执行逻辑
-                    if (res.ok == 1) {
+            let xhr = new XMLHttpRequest()
+            xhr.open("POST", "/collect/collect")
+            xhr.setRequestHeader("content-type", "application/json")
+            xhr.send(JSON.stringify({scenicId: scenic_id}))
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                  let response = JSON.parse(xhr.response)
+                  if (response.ok == 1) {
                         layer.msg("收藏成功！",{icon:1,time:2000}); // 显示弹出层信息
                         $(".collect-button").empty();               // 清空按钮区文字
                         $(".collect-button").append("已收藏");      // 填充文字
-                    } else {
-                        layer.msg("请先登录",{icon:2,time:2000});   // 提示已收藏
+                    }else if(response.code == 401) {
+                        layer.msg("请先登录",{icon:2,time:2000});   // 提示未登录
+                    }else if(response.ok == 0) {
+                        layer.msg("已收藏",{icon:2,time:2000});   // 提示已收藏
+                    }else{
+                        layer.msg("收藏失败",{icon:2,time:2000});
                     }
                 }
-            })
+            }
         });
     });
+
 
 
 </script>

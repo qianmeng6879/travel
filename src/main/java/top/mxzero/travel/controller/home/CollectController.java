@@ -97,7 +97,7 @@ public class CollectController {
      */
     @ResponseBody
     @PostMapping("collect")
-    public Object collectScenic(Collect collect) {
+    public Object collectScenic(@RequestBody Collect collect) {
         LOGGER.info("collect:{}", collect);
         User user = UserUtil.currentUser();
 

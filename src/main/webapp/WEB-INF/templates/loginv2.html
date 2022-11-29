@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form id="loginForm">
+    用户名：<input type="text" name="username" id="username"><br>
+    密码：<input type="password" name="password" id="password"><br>
+    <button type="submit">登录</button>
+    <button type="button" id="logout">注销</button>
+    <button type="button" id="accessAdmin">admin</button>
+  </form>
+  <script>
+    document.getElementById("accessAdmin").onclick = function () {
+      let xhr = new XMLHttpRequest()
+      xhr.open("GET", "http://localhost/admin/api/test")
+      xhr.setRequestHeader("content-type", "application/json")
+      xhr.send()
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          let response = xhr.response
+          console.log(response)
+        }
+      }
+    }
+
+    document.getElementById("logout").onclick = function () {
+      let xhr = new XMLHttpRequest()
+      xhr.open("GET", "http://localhost/logout")
+      xhr.setRequestHeader("content-type", "application/json")
+      xhr.send()
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          let response = xhr.response
+          console.log(response)
+        }
+      }
+    }
+
+    document.getElementById("loginForm").onsubmit = function (e) {
+      e.preventDefault()
+      let username = document.getElementById("username").value
+      let password = document.getElementById("password").value
+
+      let xhr = new XMLHttpRequest()
+      xhr.open("POST", "http://localhost/login")
+      xhr.setRequestHeader("content-type", "application/json")
+      xhr.send(JSON.stringify({ username, password }))
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          let response = xhr.response
+          console.log(response)
+        }
+      }
+    }
+
+  </script>
+</body>
+
+</html>

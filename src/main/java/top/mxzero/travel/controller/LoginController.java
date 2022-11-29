@@ -7,8 +7,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import top.mxzero.travel.event.MessageEvent;
 import top.mxzero.travel.vo.User;
+
+import java.util.Map;
 
 /**
  * @author zero
@@ -32,5 +36,10 @@ public class LoginController {
     public String loginProcess(User user) {
         LOGGER.info("user:{}", user);
         return "/";
+    }
+
+    @GetMapping("/login/v2")
+    public Object loginV2() {
+        return "loginv2";
     }
 }
