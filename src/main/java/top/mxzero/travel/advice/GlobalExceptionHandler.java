@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Object exceptionHandler(Exception e) {
         LOGGER.error(e.getMessage());
+        e.printStackTrace();
         Map<String,Object> map = new HashMap<>();
         map.put("error", e.getMessage());
         map.put("type", e.getClass().getName());
