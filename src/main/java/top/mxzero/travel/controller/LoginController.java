@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import top.mxzero.travel.service.LoggerService;
 import top.mxzero.travel.vo.User;
 
@@ -37,7 +36,7 @@ public class LoginController {
     }
 
     @GetMapping("/login/v2")
-    public Object loginV2(@RequestBody User user, HttpServletRequest request) {
+    public Object loginV2(User user, HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
 
         if(ip == null){
