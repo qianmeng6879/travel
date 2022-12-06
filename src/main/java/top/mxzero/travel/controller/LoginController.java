@@ -35,7 +35,7 @@ public class LoginController {
         return "/";
     }
 
-    @GetMapping("/login/v2")
+    @GetMapping("/loginv2")
     public Object loginV2(User user, HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
 
