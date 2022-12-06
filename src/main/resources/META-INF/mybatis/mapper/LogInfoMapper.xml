@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.mxzero.travel.dao.LoggerMapper">
+    <select id="selectList" resultType="LogInfo">
+        SELECT id,username,user_id,ip_addr,content,create_time,type from log_info
+    </select>
+
+    <select id="selectListByType" resultType="LogInfo">
+        SELECT id,username,user_id,ip_addr,content,create_time,type from log_info WHERE type = #{type}
+    </select>
+
+    <select id="selectSplitByType" resultType="LogInfo">
+        SELECT id,username,user_id,ip_addr,content,create_time,type from log_info WHERE type = #{type}
+        LIMIT #{current},#{size}
+    </select>
+
+    <insert id="insert" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO log_info(user_id,username,ip_addr,type,content,create_time)
+        VALUES(#{userId}, #{username}, #{ipAddr}, #{type}, #{content}, #{createTime})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM log_info WHERE id = #{id}
+    </delete>
+</mapper>

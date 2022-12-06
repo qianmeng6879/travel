@@ -3,16 +3,14 @@ package top.mxzero.travel.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import top.mxzero.travel.event.MessageEvent;
+import top.mxzero.travel.service.LoggerService;
 import top.mxzero.travel.vo.User;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zero
@@ -24,7 +22,7 @@ public class LoginController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    private ApplicationEventPublisher publisher;
+    private LoggerService loggerService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -39,7 +37,14 @@ public class LoginController {
     }
 
     @GetMapping("/login/v2")
-    public Object loginV2() {
+    public Object loginV2(@RequestBody User user, HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+
+        if(ip == null){
+            ip = request.getRemoteAddr();
+        }
+
+        loggerService.loginLogger(user.getUsername(), ip);
         return "loginv2";
     }
 }
