@@ -93,6 +93,7 @@ public class SecurityConfig {
                 .and().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
                 .and().authorizeRequests().antMatchers("/admin/pwd/**").hasRole("ADMIN")
                 .and().authorizeRequests().antMatchers("/collect/**").authenticated()
+                .anyRequest().permitAll()
                 .and().formLogin().loginPage("/login")
                 .and().logout().logoutSuccessHandler(((request, response, authentication) -> {
                     if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
