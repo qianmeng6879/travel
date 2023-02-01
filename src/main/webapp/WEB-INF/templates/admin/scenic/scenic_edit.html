@@ -21,11 +21,6 @@
             vertical-align:middle;
             text-align:center;
         }
-
-
-
-
-
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -228,7 +223,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">编辑景区</h3>
                         </div>
-                        <form role="form" th:action="@{/admin/scenic/edit.action}" method="post"
+                        <form role="form" th:action="@{/admin/scenic/edit + /${scenic.id}}" method="post"
                               enctype="multipart/form-data">
                             <div class="box-body">
                                 <div th:if="${error}" class="alert alert-danger alert-dismissible">

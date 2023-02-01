@@ -8,8 +8,6 @@ import top.mxzero.travel.context.SpringContext;
 import top.mxzero.travel.context.SpringWebContext;
 
 import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
 
 /**
  * @author zero
